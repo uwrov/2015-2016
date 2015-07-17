@@ -1,0 +1,15 @@
+Using the basic steps of the tutorial at derekmolloy.ie/beaglebone/getting-started-usb-network-adapter-on-the-beaglebone.
+
+First, plug the BeagleBone into your computer through its USB port. It should automatically take the IP address 192.168.7.2, and you should be able to ssh to it. For Debian installations, do 'ssh debian@192.168.7.2' with password 'temppwd'. Otherwise, you can try 'ssh root@192.168.7.2' with password 'root'. The BeagleBone will see your computer under the address 192.168.7.1.
+
+You then need to set up the BeagleBone to direct traffic through your computer. Do this with the command '/sbin/route add default gw 192.168.7.1' on the BeagleBone. You'll also want to set up a DNS to use, so execute 'echo "nameserver 8.8.8.8" >> /etc/resolv.conf' on the board.
+
+If you're running Mac OS on your computer, you'll have to take one additional step. Network sharing only works for IPs 192.168.2.x, but the board is using 192.168.7.2. The easiest way to fix this is to change the IP that the board uses when it starts up. Following the steps at ewong.me/changing-usb0-ip-address-on-the-beaglebone-black, you'll need to modify the files:
+
+    /etc/network/interfaces
+    /opt/scripts/boot/am335x_evm.sh
+    /etc/udhcpd.conf
+
+on the board. In the first two, there should be one place where the IP 192.168.7.2 is listed. Change it to 192.168.2.2. In the last file, do the same, but the IP appears in two places. Once you have done this, restart the board, and make sure it takes the new IP. You can do this by looking in the Network panel of System Preferences, or with 'ssh debian@192.168.2.2'.
+
+At this point, you'll have to enable network sharing on your respective operating system. Once you do that, the board should be able to connect to the internet. You can test this by running 'ping www.google.com' on the board, or  by opening up a browser if you have access to the GUI.
