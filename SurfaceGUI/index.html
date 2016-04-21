@@ -1,0 +1,52 @@
+<!--
+Features:
+•Two img sections for camera feed
+	-One main, large one
+	-One small, secondary one
+	-Both are displayed simultaneously and can be swapped
+•Sensor data display
+	-Updated several times a second and shown in a display feed
+•Resizable window areas
+
+Gamepad API:
+https://developer.mozilla.org/en-US/docs/Web/API/Gamepad_API/Using_the_Gamepad_API#Browser_compatibility
+-->
+
+<html>
+<head>
+	<title>UWROV Interface</title>
+
+	<link rel="stylesheet" type="text/css" href="style.css">
+	<script type="text/javascript" src="interface.js"></script>
+</head>
+<body>
+	<!-- Main Camera Display -->
+	<div id="main-display">
+		<div id="cam-one-area">
+			<img id="cam-one" class="cam" draggable="false" src="http://placehold.it/1000x600">
+		</div>
+	</div>
+
+	<!-- Main/Secondary Resizing Slider -->
+	<div id="hoz-display-slider"> </div>
+
+	<!-- Secondary Display -->
+	<div id="secondary-display">
+		<!-- Secondary Camera Display -->
+		<div id="cam-two-area">
+			<img id="cam-two" class="cam" draggable="false" src="http://placehold.it/400x800">
+		</div>
+
+		<!-- Secondary Cam/Sensor Resizing Slider -->
+		<div id="vert-display-slider"> </div>
+
+		<!-- Sensor Data Display -->
+		<div id="sensors">
+			<h2>SENSORS</h2>
+			<p>Sensor 1: <span class="data">Data<span></p>
+			<p>Sensor 2: <span class="data">Data<span></p>
+			<p>Sensor 3: <span class="data">Data<span></p>
+		</div>
+	</div>
+</body>
+</html>

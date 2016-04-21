@@ -1,0 +1,72 @@
+
+body, h2 {
+	font-family: "Arial Black", sans-serif;
+}
+
+body {
+	margin: 0;
+}
+
+h2 {
+	margin-top: 0;
+	font-size: 20pt;
+	border-bottom: 1px solid gray
+}
+
+body, #hoz-display-slider, #vert-display-slider {
+	background-color: #847998;
+}
+
+#main-display, #secondary-display {
+	background-color: #DFDFDF;
+}
+
+#main-display {
+	float: left;
+	width: 80%;
+	height: 100%;
+	margin-right: 10px;
+}
+
+#secondary-display {
+	overflow: hidden;
+	height: 100%;
+}
+
+#cam-one-area {
+	height: 100%;
+}
+
+#cam-two-area {
+	border-bottom: 10px solid #847998;
+	height: 30%;
+}
+
+#sensors {
+	padding: 10px;
+	font-family: monospace;
+	font-size: 15pt;
+}
+
+.data {
+	font-weight: bold;
+}
+
+#hoz-display-slider, #vert-display-slider {
+	position: absolute;
+	left: 80%;
+}
+
+#hoz-display-slider {
+	width: 10px;
+	height: 100%;
+	cursor: col-resize;
+	z-index: 10;
+}
+
+#vert-display-slider {
+	top: 30%;
+	width: 20%;
+	height: 10px;
+	cursor: row-resize;
+}
