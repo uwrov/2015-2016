@@ -43,7 +43,7 @@ body, #hoz-display-slider, #vert-display-slider {
 	height: 100%;
 }
 
-#cam-two-area {
+#cam-two-area, #cam-three-area {
 	border-bottom: 10px solid #847998;
 	height: 30%;
 	resize: vertical;

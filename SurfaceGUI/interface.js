@@ -14,6 +14,13 @@
 		x: window.innerWidth,
 		y: window.innerHeight
 	};
+
+	//Previous States of Gamepad Buttons
+	var prevButtonStates = {};
+
+	//
+	var buttonMappings = {};
+
 	//Whether gamepad events are available
 	var haveEvents = 'ongamepadconnected' in window;
 	//All currently connected controllers
@@ -26,6 +33,7 @@
 		//Set camera feeds to automatically maximize their sizes
 		document.getElementById("cam-one").onload = resizeAllCams;
 		document.getElementById("cam-two").onload = resizeAllCams;
+		document.getElementById("cam-three").onload = resizeAllCams;
 		resizeAllCams();
 
 		//Resize cameras if the window is
@@ -58,6 +66,8 @@
 	 function resizeAllCams() {
 	 	resizeCam(document.getElementById("cam-one"));
 	 	resizeCam(document.getElementById("cam-two"));
+	 	resizeCam(document.getElementById("cam-three"));
+
 	 }
 
 	/*
@@ -96,6 +106,7 @@
 	 function resizeDisplays() {
 	 	var mainDisplay = document.getElementById("main-display");
 	 	var camTwoArea = document.getElementById("cam-two-area");
+	 	var camThreeArea = document.getElementById("cam-three-area");
 	 	var hozSlider = document.getElementById("hoz-display-slider");
 	 	var vertSlider = document.getElementById("vert-display-slider");
 
@@ -129,11 +140,13 @@
 	 function switchCams() {
 	 	var cam1 = document.getElementById("cam-one");
 	 	var cam2 = document.getElementById("cam-two");
+	 	var cam3 = document.getElementById("cam-three")
 
 		//Switch the src's of the cams
 		var cam1src = cam1.src;
 		cam1.src = cam2.src;
-		cam2.src = cam1src;
+		cam2.src = cam3.src;
+		cam3.src = cam1src;
 
 		resizeAllCams();
 	}
@@ -253,6 +266,10 @@
 	 	b.className = "buttons";
 	 	for (var i = 0; i < gamepad.buttons.length; i++) {
 	 		var e = document.createElement("span");
+	 		buttonMappings[i] = {
+				prevState:false,
+				func: null
+			};
 	 		e.className = "button";
     		//e.id = "b" + i;
     		e.innerHTML = i + " ";
@@ -277,6 +294,10 @@
    			d.appendChild(a);
 
   		document.body.appendChild(d);
+  		
+  		//Button Mappings To Functions
+  		buttonMappings[3].func = switchCams;
+
   		requestAnimationFrame(updateStatus);
   	}
 
@@ -325,9 +346,17 @@
 
   				if (pressed) {
   					b.className = "button pressed";
+  					
+  					if(!buttonMappings[i].prevState){
+  						if(buttonMappings[i].func != null) {
+  							buttonMappings[i].func();
+  						}
+  					}
   				} else {
   					b.className = "button";
   				}
+  				buttonMappings[i].prevState = pressed;
+  				prevButtonStates[i] = val;
   			}
 
   			//Update controller joystick displays
