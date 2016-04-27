@@ -26,7 +26,13 @@ body, #hoz-display-slider, #vert-display-slider {
 	width: 80%;
 	height: 100%;
 	margin-right: 10px;
+	resize: horizontal;
+	overflow: hidden;
 }
+
+/*#main-display:active {
+	width: 20%;
+}*/
 
 #secondary-display {
 	overflow: hidden;
@@ -40,7 +46,13 @@ body, #hoz-display-slider, #vert-display-slider {
 #cam-two-area {
 	border-bottom: 10px solid #847998;
 	height: 30%;
+	resize: vertical;
+	overflow: hidden;
 }
+
+/*#cam-two-area:active {
+	height: 20%;
+}*/
 
 #sensors {
 	padding: 10px;
@@ -69,4 +81,9 @@ body, #hoz-display-slider, #vert-display-slider {
 	width: 20%;
 	height: 10px;
 	cursor: row-resize;
+}
+
+/* TODO: Remove. This is just for testing the gamepad output */
+.pressed {
+	color: blue;
 }
