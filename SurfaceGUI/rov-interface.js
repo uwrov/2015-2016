@@ -204,51 +204,48 @@ function switchCams() {
 	 * Sends a HTTP GET request with a given motion action for a given camera.
 	 * 
 	 * @param {Number} camNum The number of the camera
-	 * @param {String} action The motion action of the camera (e.g. quit,
-	 *        restart)
-*/
-function camAction(camNum, action) {
-	var xmlHttp = new XMLHttpRequest();
-	var url = "http://" + cameraIP + ":" + CAMERA_PORT + "/" + camNum + "/action/" + action;
-	xmlHttp.open("GET", url, true);
-	xmlHttp.send();
-}
+	 * @param {String} action The motion action of the camera (e.g. quit, restart)
+	 */
+	 function camAction(camNum, action) {
+	 	var xmlHttp = new XMLHttpRequest();
+	 	var url = "http://" + cameraIP + ":" + CAMERA_PORT + "/" + camNum + "/action/" + action;
+	 	xmlHttp.open("GET", url, true);
+	 	xmlHttp.send();
+	 }
 
 	/*
 	 * Updates and displays the sensor values.
 	 */
 	 function updateSensors() {
-	 	//TODO
-	 }
+		//TODO
+	}
 
-	////////////////////////////////////////////////////////////////////////
+	////////////////////////////////////////////////////////////////////////////
+	// GAMEPAD HANDLING
+	////////////////////////////////////////////////////////////////////////////
 
 	if (!haveEvents) {
 		setInterval(scangamepads, 500);
 	}
 
 	/*
-	 * 
-	 * 
-	 * 
+	 * Adds a gamepad. Called when a gamepad is connected.
 	 */
 	 function connecthandler(e) {
 	 	addgamepad(e.gamepad);
+	 	$("controller-display").css("background-color", "white");
 	 }
 
 	/*
-	 * 
-	 * 
-	 * 
+	 * Removes a gamepad. Called when a gamepad is disconnected.
 	 */
 	 function disconnecthandler(e) {
 	 	removegamepad(e.gamepad);
 	 }
 
 	/*
-	 * 
-	 * 
-	 * 
+	 * Adds a gamepad, creating a display for it and mapping its buttons to
+	 * functions.
 	 */
 	 function addgamepad(gamepad) {
 	 	controllers[gamepad.index] = gamepad;
@@ -262,13 +259,14 @@ function camAction(camNum, action) {
 	 	t.appendChild(document.createTextNode("gamepad: " + gamepad.id));
 	 	d.appendChild(t);
 
-	 	//For each of the gamepad's buttons, create a display
+	 	//For each of the gamepad's buttons, create a mapping and display
 	 	var b = document.createElement("div");
 	 	b.className = "buttons";
 	 	for (var i = 0; i < gamepad.buttons.length; i++) {
 	 		var e = document.createElement("span");
+	 		//Set the button's data
 	 		buttonMappings[i] = {
-	 			prevState:false,
+	 			prevState: false,
 	 			func: null
 	 		};
 	 		e.className = "button";
@@ -281,43 +279,44 @@ function camAction(camNum, action) {
     	//Create display for the controller's joysticks
     	var a = document.createElement("div");
     	a.className = "axes";
-
     	for (var i = 0; i < gamepad.axes.length; i++) {
     		var p = document.createElement("progress");
     		p.className = "axis";
-   			 //p.id = "a" + i;
-   			 p.setAttribute("max", "2");
-   			 p.setAttribute("value", "1");
-   			 p.innerHTML = i;
-   			 a.appendChild(p);
-   			}
+   			//p.id = "a" + i;
+   			p.setAttribute("max", "2");
+   			p.setAttribute("value", "1");
+   			p.innerHTML = i;
+   			a.appendChild(p);
+   		}
+   		d.appendChild(a);
 
-   			d.appendChild(a);
+   		//Add controller display to its panel
+   		$("#controller-display").append(d);
 
-   			$("#controller-display").append(d);
-   			// document.body.appendChild(d);
-   			
-  		//Button Mappings To Functions
-  		buttonMappings[3].func = switchCams;
+	  	//Map buttons to functions
+	  	buttonMappings[3].func = switchCams;
 
-  		requestAnimationFrame(updateStatus);
-  	}
+	  	requestAnimationFrame(updateStatus);
+	  }
 
 	/*
 	 * Removes the gamepad display for the given gamepad.
-	 * 
-	 * 
 	 */
 	 function removegamepad(gamepad) {
 	 	var d = document.getElementById("controller" + gamepad.index);
 	 	document.body.removeChild(d);
 	 	delete controllers[gamepad.index];
+
+	 	//Gray-out the controller display panel if there are no controllers
+	 	//connected
+	 	if(controllers.length == 0) {
+	 		$("controller-display").css("background-color", "gray");
+	 	}
 	 }
 
 	/*
-	 * 
-	 * 
-	 * 
+	 * Updates using the connected gamepads' states. Updates display, button and
+	 * axis states, and handles button and axis input.
 	 */
 	 function updateStatus() {
 	 	if (!haveEvents) {
@@ -327,6 +326,7 @@ function camAction(camNum, action) {
 	 	var i = 0;
 	 	var j;
 
+	 	//For each connected controller...
 	 	for (j in controllers) {
 	 		var controller = controllers[j];
 	 		var d = document.getElementById("controller" + j);
@@ -342,40 +342,41 @@ function camAction(camNum, action) {
 	 				val = val.value;
 	 			}
 
+	 			//Button values
 	 			var pct = Math.round(val * 100) + "%";
 	 			b.style.backgroundSize = pct + " " + pct;
-  				b.innerHTML = i + ":" + pct + " // "; //TODO
+	 			b.innerHTML = i + ":" + pct + " // ";
 
-  				if (pressed) {
-  					b.className = "button pressed";
-  					
-  					if(!buttonMappings[i].prevState){
-  						if(buttonMappings[i].func != null) {
-  							buttonMappings[i].func();
-  						}
-  					}
-  				} else {
-  					b.className = "button";
-  				}
-  				buttonMappings[i].prevState = pressed;
-  			}
+	 			//If the button is pressed...
+	 			if (pressed) {
+	 				b.className = "button pressed";
 
-  			//Update controller joystick displays
-  			var axes = d.getElementsByClassName("axis");
-  			for (i = 0; i < controller.axes.length; i++) {
-  				var a = axes[i];
-  				a.innerHTML = i + ": " + controller.axes[i].toFixed(4);
-  				a.setAttribute("value", controller.axes[i] + 1);
-  			}
-  		}
+	 				if(!buttonMappings[i].prevState){
+	 					//Call the function that button is mapped to
+	 					if(buttonMappings[i].func != null) {
+	 						buttonMappings[i].func();
+	 					}
+	 				}
+	 			} else {
+	 				b.className = "button";
+	 			}
+	 			buttonMappings[i].prevState = pressed;
+	 		}
 
-  		requestAnimationFrame(updateStatus);
-  	}
+	 		//Update controller joystick displays
+	 		var axes = d.getElementsByClassName("axis");
+	 		for (i = 0; i < controller.axes.length; i++) {
+	 			var a = axes[i];
+	 			a.innerHTML = i + ": " + controller.axes[i].toFixed(4);
+	 			a.setAttribute("value", controller.axes[i] + 1);
+	 		}
+	 	}
+
+	 	requestAnimationFrame(updateStatus);
+	 }
 
 	/*
-	 * 
-	 * 
-	 * 
+	 * Searches for gamepads. If any are found, adds them to the controller list.
 	 */
 	 function scangamepads() {
 	 	var gamepads = navigator.getGamepads ? navigator.getGamepads() : (navigator.webkitGetGamepads ? navigator.webkitGetGamepads() : []);

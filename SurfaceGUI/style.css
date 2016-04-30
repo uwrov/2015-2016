@@ -49,3 +49,7 @@ img {
 	overflow: hidden;
 	padding-left: 10px !important;
 }
+
+#controller-display {
+	background-color: gray !important;
+}
