@@ -4,6 +4,8 @@
 
 	//Delay between sensor update (milliseconds)
 	var SENSOR_UPDATE_DELAY = 10;
+	//Main camera port (for config)
+	var CAMERA_PORT = "8080";
 
 	var WIDTH = window.innerWidth;
 	var HEIGHT = window.innerHeight;
@@ -73,7 +75,9 @@
 		$("#main-display").dblclick(switchCams);
 		//Set IPs when button is clicked
 		$("#set-ips").click(setIPS);
+		setIPS();
 
+		//Set camera action button functions
 		$("#cam1-quit").click(function() { camAction(1, "quit"); });
 		$("#cam2-quit").click(function() { camAction(2, "quit"); });
 		$("#cam3-quit").click(function() { camAction(3, "quit"); });
@@ -120,13 +124,12 @@
 		}
 
 		//If the small dimension overflows the border, maximize it instead
-		var parentStyle = window.getComputedStyle(cam.parentNode);
-		var camStyle = window.getComputedStyle(cam);
-		if(parseInt(camStyle.height) > parseInt(parentStyle.height)) {
+		var panel = cam.parentNode.parentNode;
+		if(panel.offsetHeight < panel.scrollHeight) {
 			cam.style.height = "100%";
 			cam.style.width = "auto";
 		}
-		if(parseInt(camStyle.width) > parseInt(parentStyle.width)) {
+		if(panel.offsetWidth < panel.offsetWidth) {
 			cam.style.width = "100%";
 			cam.style.height = "auto";
 		}
@@ -135,22 +138,22 @@
 	/*
 	 * Cycles the camera feeds (1st becomes 3rd, 3rd becomes 2nd, 2nd becomes
 	 * 1st)
-	 */
-	 function switchCams() {
-	 	var cam1 = document.getElementById("cam-one-area");
-	 	var cam2 = document.getElementById("cam-two-area");
-	 	var cam3 = document.getElementById("cam-three-area");
+*/
+function switchCams() {
+	var cam1 = document.getElementById("cam-one-area");
+	var cam2 = document.getElementById("cam-two-area");
+	var cam3 = document.getElementById("cam-three-area");
 
-	 	var cam1Parent = cam1.parentNode;
-	 	var cam2Parent = cam2.parentNode;
-	 	var cam3Parent = cam3.parentNode;
+	var cam1Parent = cam1.parentNode;
+	var cam2Parent = cam2.parentNode;
+	var cam3Parent = cam3.parentNode;
 
-	 	cam1Parent.insertBefore(cam2, cam1Parent.childNodes[0]);
-	 	cam2Parent.insertBefore(cam3, cam2Parent.childNodes[0]);
-	 	cam3Parent.insertBefore(cam1, cam3Parent.childNodes[0]);
+	cam1Parent.insertBefore(cam2, cam1Parent.childNodes[0]);
+	cam2Parent.insertBefore(cam3, cam2Parent.childNodes[0]);
+	cam3Parent.insertBefore(cam1, cam3Parent.childNodes[0]);
 
-		resizeAllCams();
-	}
+	resizeAllCams();
+}
 
 	/*
 	 * Show the loading spinner for a camera
@@ -185,6 +188,13 @@
 		$("#cam-two").attr("src", "http://" + cam2ip);
 		$("#cam-three").attr("src", "http://" + cam3ip);
 
+		//Set config links
+		var configUrlStart = "http://" + cameraIP + ":" + CAMERA_PORT + "/";
+		var configUrlEnd = "/config/list";
+		$("#cam1-config").attr("href", configUrlStart + "1" + configUrlEnd);
+		$("#cam2-config").attr("href", configUrlStart + "2" + configUrlEnd);
+		$("#cam3-config").attr("href", configUrlStart + "3" + configUrlEnd);
+
 		//Show hide camera feeds and show loading spinners
 		$(".cam").each(function() { $(this).hide(); })
 		$(".loading").each(function() { $(this).show(); });
@@ -196,13 +206,13 @@
 	 * @param {Number} camNum The number of the camera
 	 * @param {String} action The motion action of the camera (e.g. quit,
 	 *        restart)
-	 */
-	function camAction(camNum, action) {
-		var xmlHttp = new XMLHttpRequest();
-		var url = "http://" + cameraIP + ":8080" + "/" + camNum + "/action/" + action;
-		xmlHttp.open("GET", url, true);
-		xmlHttp.send();
-	}
+*/
+function camAction(camNum, action) {
+	var xmlHttp = new XMLHttpRequest();
+	var url = "http://" + cameraIP + ":" + CAMERA_PORT + "/" + camNum + "/action/" + action;
+	xmlHttp.open("GET", url, true);
+	xmlHttp.send();
+}
 
 	/*
 	 * Updates and displays the sensor values.
