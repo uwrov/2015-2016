@@ -12,10 +12,6 @@ h2 {
 	border-bottom: 1px solid gray
 }
 
-img {
-	user-select: none;
-}
-
 .loading {
 	width: 50px;
 	height: 50px;
@@ -52,4 +48,17 @@ img {
 
 #controller-display {
 	background-color: gray !important;
+}
+
+#cam-one-area, #cam-two-area, #cam-three-area {
+	position: relative;
+}
+
+#cam-text {
+	color: rgba(200,200,200,100);
+	font-size: 20pt;
+	position: absolute;
+	top: 0;
+	right: 0;
+	margin: 5px;
 }

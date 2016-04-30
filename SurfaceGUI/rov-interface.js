@@ -7,8 +7,13 @@
 	//Main camera port (for config)
 	var CAMERA_PORT = "8080";
 
+	var MAX_BRIGHTNESS = 255;
+	var MAX_CONTRAST = 255;
+
+	//Window dimensions (for config purposes)
 	var WIDTH = window.innerWidth;
 	var HEIGHT = window.innerHeight;
+	//Main layout config settings (TODO: Refactor redundancy and magic numbers)
 	var MAIN_LAYOUT_SETTINGS = {
 		defaults: {
 			applyDefaultStyles: true,
@@ -34,6 +39,7 @@
 			minHeight: HEIGHT * 0.1
 		}
 	};
+	//Secondary layout config settings
 	var SECONDARY_LAYOUT_SETTINGS = jQuery.extend({}, MAIN_LAYOUT_SETTINGS);
 	SECONDARY_LAYOUT_SETTINGS.north = {
 		initClosed: false,
@@ -53,6 +59,7 @@
 	//All currently connected controllers
 	var controllers = {};
 
+	//IP of cameras
 	var cameraIP;
 
 	$(document).ready(function () {
@@ -85,6 +92,9 @@
 		$("#cam2-restart").click(function() { camAction(2, "restart"); });
 		$("#cam3-restart").click(function() { camAction(3, "restart"); });
 
+		$("#brightness-slider").change(updateBrightness);
+		$("#contrast-slider").change(updateContrast);
+
 		//Regularly update sensor values
 		setInterval(updateSensors, SENSOR_UPDATE_DELAY);
 		//TODO tmp: For some reason cameras don't resize on initial load
@@ -111,7 +121,7 @@
 	 * Resizes a given camera img feed such that it fills the area it is in
 	 * without stretching or overflowing the area borders.
 	 * 
-	 * @param {img} cam An HTML img tag to resize
+	 * @param {img DOM Element} cam An HTML img tag to resize
 	 */
 	 function resizeCam(cam) {
 		//Set the larger dimension to be maximized
@@ -136,24 +146,23 @@
 	}
 
 	/*
-	 * Cycles the camera feeds (1st becomes 3rd, 3rd becomes 2nd, 2nd becomes
-	 * 1st)
-*/
-function switchCams() {
-	var cam1 = document.getElementById("cam-one-area");
-	var cam2 = document.getElementById("cam-two-area");
-	var cam3 = document.getElementById("cam-three-area");
+	 * Cycles the camera feeds (1st becomes 3rd, 3rd becomes 2nd, 2nd becomes 1st)
+	 */
+	 function switchCams() {
+	 	var cam1 = document.getElementById("cam-one-area");
+	 	var cam2 = document.getElementById("cam-two-area");
+	 	var cam3 = document.getElementById("cam-three-area");
 
-	var cam1Parent = cam1.parentNode;
-	var cam2Parent = cam2.parentNode;
-	var cam3Parent = cam3.parentNode;
+	 	var cam1Parent = cam1.parentNode;
+	 	var cam2Parent = cam2.parentNode;
+	 	var cam3Parent = cam3.parentNode;
 
-	cam1Parent.insertBefore(cam2, cam1Parent.childNodes[0]);
-	cam2Parent.insertBefore(cam3, cam2Parent.childNodes[0]);
-	cam3Parent.insertBefore(cam1, cam3Parent.childNodes[0]);
+	 	cam1Parent.insertBefore(cam2, cam1Parent.childNodes[0]);
+	 	cam2Parent.insertBefore(cam3, cam2Parent.childNodes[0]);
+	 	cam3Parent.insertBefore(cam1, cam3Parent.childNodes[0]);
 
-	resizeAllCams();
-}
+	 	resizeAllCams();
+	 }
 
 	/*
 	 * Show the loading spinner for a camera
@@ -201,16 +210,64 @@ function switchCams() {
 	}
 
 	/*
+	 * Sends a HTTP GET request to a given URL.
+	 * 
+	 * @param {String} url The URL to send the request to
+	 */
+	 function httpGet(url) {
+	 	var xmlHttp = new XMLHttpRequest();
+	 	xmlHttp.open("GET", url, true);
+	 	xmlHttp.send();
+	 }
+
+	/*
 	 * Sends a HTTP GET request with a given motion action for a given camera.
 	 * 
 	 * @param {Number} camNum The number of the camera
 	 * @param {String} action The motion action of the camera (e.g. quit, restart)
 	 */
 	 function camAction(camNum, action) {
-	 	var xmlHttp = new XMLHttpRequest();
 	 	var url = "http://" + cameraIP + ":" + CAMERA_PORT + "/" + camNum + "/action/" + action;
-	 	xmlHttp.open("GET", url, true);
-	 	xmlHttp.send();
+	 	httpGet(url);
+	 }
+
+	 /*
+	  * Sends a HTTP GET request to set a given config option to a given value
+	  * for a given camera.
+	  * 
+	  * @param {Number} camNum The number of the camera
+	  * @param {String} option The name of the config option to set
+	  * @param {Number} value The value to set the config option to
+	  */
+	 function camConfig(camNum, option, value) {
+	 	var url = "http://" + cameraIP + ":" + CAMERA_PORT + "/" + camNum + "/config/set?" + option + "=" + value;
+	 	httpGet(url);
+	 }
+
+	 /*
+	  * Updates the brightness of all cameras based on the brightness config
+	  * slider value. Also updates the percentage brightness display.
+	  */
+	 function updateBrightness() {
+	 	var val = $("#brightness-slider").val();
+	 	$("#brightness-config").html(Math.round(val / MAX_BRIGHTNESS * 100) + "%");
+
+	 	for(var i = 1; i <= document.querySelectorAll(".cam").length; i++) {
+	 		camConfig(i, "brightness", val);
+	 	}
+	 }
+
+	 /*
+	  * Updates the contrast of all cameras based on the contrast config
+	  * slider value. Also updates the percentage contrast display.
+	  */
+	 function updateContrast() {
+	 	var val = $("#contrast-slider").val();
+	 	$("#contrast-config").html(Math.round(val / MAX_CONTRAST * 100) + "%");
+
+	 	for(var i = 1; i <= document.querySelectorAll(".cam").length; i++) {
+	 		camConfig(i, "contrast", val);
+	 	}
 	 }
 
 	/*
