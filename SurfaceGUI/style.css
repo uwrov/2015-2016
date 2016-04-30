@@ -1,10 +1,9 @@
-
 body, h2 {
 	font-family: "Arial Black", sans-serif;
 }
 
-body {
-	margin: 0;
+div {
+	padding: 0 !important;
 }
 
 h2 {
@@ -13,77 +12,40 @@ h2 {
 	border-bottom: 1px solid gray
 }
 
-body, #hoz-display-slider, #vert-display-slider {
-	background-color: #847998;
+img {
+	user-select: none;
 }
 
-#main-display, #secondary-display {
-	background-color: #DFDFDF;
+.loading {
+	width: 50px;
+	height: 50px;
 }
 
-#main-display {
-	float: left;
-	width: 80%;
-	height: 100%;
-	margin-right: 10px;
-	resize: horizontal;
-	overflow: hidden;
+.ui-layout-resizer-dragging {
+	background-color: rgb(200,250,200) !important;
 }
 
-/*#main-display:active {
-	width: 20%;
-}*/
-
-#secondary-display {
-	overflow: hidden;
-	height: 100%;
+.pressed {
+	color: blue;
 }
-
-#cam-one-area {
-	height: 100%;
-}
-
-#cam-two-area, #cam-three-area {
-	border-bottom: 10px solid #847998;
-	height: 30%;
-	resize: vertical;
-	overflow: hidden;
-}
-
-/*#cam-two-area:active {
-	height: 20%;
-}*/
 
 #sensors {
-	padding: 10px;
 	font-family: monospace;
 	font-size: 15pt;
 }
 
-.data {
-	font-weight: bold;
+#options, #sensors, #controller-display {
+	padding: 10px !important;
 }
 
-#hoz-display-slider, #vert-display-slider {
-	position: absolute;
-	left: 80%;
-}
-
-#hoz-display-slider {
-	width: 10px;
+#options-panel-one {
+	float: left;
+	width: 50%;
 	height: 100%;
-	cursor: col-resize;
-	z-index: 10;
+	border-right: 1px solid gray
 }
 
-#vert-display-slider {
-	top: 30%;
-	width: 20%;
-	height: 10px;
-	cursor: row-resize;
-}
-
-/* TODO: Remove. This is just for testing the gamepad output */
-.pressed {
-	color: blue;
+#options-panel-two {
+	overflow: hidden;
+	padding-left: 10px !important;
 }
