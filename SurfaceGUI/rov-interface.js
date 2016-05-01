@@ -48,8 +48,8 @@
 		},
 		north: {
 			initClosed: true,
-			size: HEIGHT * 0.25,
-			minSize: HEIGHT * 0.25
+			size: HEIGHT * 0.3,
+			minSize: HEIGHT * 0.3
 		},
 		south: {
 			initClosed: true,
@@ -98,6 +98,13 @@
 
 		//Set to initial IP
 		cameraIP = $("#cam-ip").val();
+
+		//Checkbox to toggle camera label overlay
+		$("#cam-labels-checkbox").change(function() {
+			$(".cam-text").each(function() {
+				$(this).toggle();
+			});
+		});
 
 		//Switch cams with mouse
 		$("#main-display").dblclick(switchCams);

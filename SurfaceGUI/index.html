@@ -34,7 +34,7 @@ https://developer.mozilla.org/en-US/docs/Web/API/Gamepad_API/Using_the_Gamepad_A
 	<!-- Main camera display -->
 	<div id="main-display" class="ui-layout-center">
 		<div id="cam-one-area">
-			<p id="cam-text">Cam 1</p>
+			<p class="cam-text">Cam 1</p>
 			<img src="images/loading.gif" class="loading" alt="loading" hidden	>
 			<img id="cam-one" class="cam" alt="Main Camera Feed" draggable="false" src="http://placehold.it/1000x800">
 		</div>
@@ -48,7 +48,8 @@ https://developer.mozilla.org/en-US/docs/Web/API/Gamepad_API/Using_the_Gamepad_A
 			CAM 1 Port: <input id="cam1port" type="text" name="port" value="8081"> <br />
 			CAM 2 Port: <input id="cam2port" type="text" name="port" value="8082"> <br />
 			CAM 3 Port: <input id="cam3port" type="text" name="port" value="8083"> <br />
-			<button id="set-ips">Set IPs</button>
+			<button id="set-ips">Set IPs</button> <br />
+			Show Camera Labels: <input id="cam-labels-checkbox" type="checkbox" name="cam-labels" checked>
 		</div>
 		<div id="options-panel-two">
 			CAM 1: <a id="cam1-config" href="" target="_blank">Config</a> <button id="cam1-quit">Quit</button> <button id="cam1-restart">Restart</button><br />
@@ -64,7 +65,7 @@ https://developer.mozilla.org/en-US/docs/Web/API/Gamepad_API/Using_the_Gamepad_A
 		<!-- 2nd camera display -->
 		<div class="ui-layout-north">
 			<div id="cam-two-area">
-				<p id="cam-text">Cam 2</p>
+				<p class="cam-text">Cam 2</p>
 				<img src="images/loading.gif" class="loading" alt="loading" hidden>
 				<img id="cam-two" class="cam" alt="Camera Feed 2" draggable="false" src="http://placehold.it/300x700">
 			</div>
@@ -72,7 +73,7 @@ https://developer.mozilla.org/en-US/docs/Web/API/Gamepad_API/Using_the_Gamepad_A
 		<!-- 3rd camera display -->
 		<div class="ui-layout-center">
 			<div id="cam-three-area">
-				<p id="cam-text">Cam 3</p>
+				<p class="cam-text">Cam 3</p>
 				<img src="images/loading.gif" class="loading" alt="loading" hidden>
 				<img id="cam-three" class="cam" alt="Camera Feed 3" draggable="false" src="http://placehold.it/800x500">
 			</div>

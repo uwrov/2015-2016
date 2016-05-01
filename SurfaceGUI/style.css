@@ -50,7 +50,7 @@ h2 {
 	position: relative;
 }
 
-#cam-text {
+.cam-text {
 	color: rgba(200,200,200,100);
 	font-size: 20pt;
 	position: absolute;
