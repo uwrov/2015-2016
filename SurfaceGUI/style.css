@@ -46,10 +46,6 @@ h2 {
 	padding-left: 10px !important;
 }
 
-#controller-display {
-	background-color: gray !important;
-}
-
 #cam-one-area, #cam-two-area, #cam-three-area {
 	position: relative;
 }

@@ -2,6 +2,24 @@
 (function() {
 	"use strict";
 
+	//0 A
+	//1 B
+	//2 X
+	//3 Y
+	//4 LB
+	//5 RB
+	//6 LT
+	//7 RT
+	//8 Back
+	//9 Start
+	//10 Lclick
+	//11 Rclick
+	//12 Dpad up
+	//13 Dpad down
+	//14 Dpad left
+	//15 Dpad right
+	//16 Xbox
+
 	//Delay between sensor update (milliseconds)
 	var SENSOR_UPDATE_DELAY = 10;
 	//Main camera port (for config)
@@ -81,8 +99,8 @@
 		//Switch cams with mouse
 		$("#main-display").dblclick(switchCams);
 		//Set IPs when button is clicked
-		$("#set-ips").click(setIPS);
-		setIPS();
+		$("#set-ips").click(setIPs);
+		setIPs();
 
 		//Set camera action button functions
 		$("#cam1-quit").click(function() { camAction(1, "quit"); });
@@ -94,6 +112,8 @@
 
 		$("#brightness-slider").change(updateBrightness);
 		$("#contrast-slider").change(updateContrast);
+
+		$("#controller-display").css("background-color", "gray");
 
 		//Regularly update sensor values
 		setInterval(updateSensors, SENSOR_UPDATE_DELAY);
@@ -186,7 +206,7 @@
 	 * Set the IP's of each camera feed to the values in the config options.
 	 * Hides all camera feeds and shows all loading spinners.
 	 */
-	 function setIPS() {
+	 function setIPs() {
 	 	cameraIP = $("#cam-ip").val();
 	 	var cam1ip = cameraIP + ":" + $("#cam1port").val();
 	 	var cam2ip = cameraIP + ":" + $("#cam2port").val();
@@ -239,36 +259,36 @@
 	  * @param {String} option The name of the config option to set
 	  * @param {Number} value The value to set the config option to
 	  */
-	 function camConfig(camNum, option, value) {
-	 	var url = "http://" + cameraIP + ":" + CAMERA_PORT + "/" + camNum + "/config/set?" + option + "=" + value;
-	 	httpGet(url);
-	 }
+	  function camConfig(camNum, option, value) {
+	  	var url = "http://" + cameraIP + ":" + CAMERA_PORT + "/" + camNum + "/config/set?" + option + "=" + value;
+	  	httpGet(url);
+	  }
 
 	 /*
 	  * Updates the brightness of all cameras based on the brightness config
 	  * slider value. Also updates the percentage brightness display.
 	  */
-	 function updateBrightness() {
-	 	var val = $("#brightness-slider").val();
-	 	$("#brightness-config").html(Math.round(val / MAX_BRIGHTNESS * 100) + "%");
+	  function updateBrightness() {
+	  	var val = $("#brightness-slider").val();
+	  	$("#brightness-config").html(Math.round(val / MAX_BRIGHTNESS * 100) + "%");
 
-	 	for(var i = 1; i <= document.querySelectorAll(".cam").length; i++) {
-	 		camConfig(i, "brightness", val);
-	 	}
-	 }
+	  	for(var i = 1; i <= document.querySelectorAll(".cam").length; i++) {
+	  		camConfig(i, "brightness", val);
+	  	}
+	  }
 
 	 /*
 	  * Updates the contrast of all cameras based on the contrast config
 	  * slider value. Also updates the percentage contrast display.
 	  */
-	 function updateContrast() {
-	 	var val = $("#contrast-slider").val();
-	 	$("#contrast-config").html(Math.round(val / MAX_CONTRAST * 100) + "%");
+	  function updateContrast() {
+	  	var val = $("#contrast-slider").val();
+	  	$("#contrast-config").html(Math.round(val / MAX_CONTRAST * 100) + "%");
 
-	 	for(var i = 1; i <= document.querySelectorAll(".cam").length; i++) {
-	 		camConfig(i, "contrast", val);
-	 	}
-	 }
+	  	for(var i = 1; i <= document.querySelectorAll(".cam").length; i++) {
+	  		camConfig(i, "contrast", val);
+	  	}
+	  }
 
 	/*
 	 * Updates and displays the sensor values.
@@ -305,6 +325,8 @@
 	 * functions.
 	 */
 	 function addgamepad(gamepad) {
+	 	$("#controller-display").css("background-color", "white");
+
 	 	controllers[gamepad.index] = gamepad;
 
 	 	//Create div to show output values for this gamepad
@@ -339,7 +361,7 @@
     	for (var i = 0; i < gamepad.axes.length; i++) {
     		var p = document.createElement("progress");
     		p.className = "axis";
-   			//p.id = "a" + i;
+   			// p.id = "a" + i;
    			p.setAttribute("max", "2");
    			p.setAttribute("value", "1");
    			p.innerHTML = i;
@@ -361,14 +383,11 @@
 	 */
 	 function removegamepad(gamepad) {
 	 	var d = document.getElementById("controller" + gamepad.index);
-	 	document.body.removeChild(d);
+	 	d.parentNode.removeChild(d);
 	 	delete controllers[gamepad.index];
 
-	 	//Gray-out the controller display panel if there are no controllers
-	 	//connected
-	 	if(controllers.length == 0) {
-	 		$("controller-display").css("background-color", "gray");
-	 	}
+	 	//Gray-out the controller display panel
+	 	$("#controller-display").css("background-color", "gray");
 	 }
 
 	/*
