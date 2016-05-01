@@ -2,23 +2,26 @@
 (function() {
 	"use strict";
 
-	//0 A
-	//1 B
-	//2 X
-	//3 Y
-	//4 LB
-	//5 RB
-	//6 LT
-	//7 RT
-	//8 Back
-	//9 Start
-	//10 Lclick
-	//11 Rclick
-	//12 Dpad up
-	//13 Dpad down
-	//14 Dpad left
-	//15 Dpad right
-	//16 Xbox
+	//Indices of the Xbox gamepad buttons
+	var BUTTON = {
+		a: 0,			//A
+		b: 1,			//B
+		x: 2,			//X
+		y: 3,			//Y
+		lb: 4,			//Left Bumper
+		rb: 5,			//Right Bumper
+		lt: 6,			//Left Trigger
+		rt: 7,			//Right Trigger
+		back: 8,		//Back
+		start: 9,		//Start
+		lstick: 10,		//Left Stick Click
+		rstick: 11,		//Right Stick Click
+		dup: 12,		//D-pad up
+		ddown: 13,		//D-pad down
+		dleft: 14,		//D-pad left
+		dright: 15,		//D-pad right
+		xb: 16			//Xbox button
+	}
 
 	//Delay between sensor update (milliseconds)
 	var SENSOR_UPDATE_DELAY = 10;
@@ -71,7 +74,7 @@
 	}
 
 	//Data for button mappings
-	var buttonMappings = {};
+	var buttonMappings = [];
 	//Whether gamepad events are available
 	var haveEvents = 'ongamepadconnected' in window;
 	//All currently connected controllers
@@ -373,7 +376,7 @@
    		$("#controller-display").append(d);
 
 	  	//Map buttons to functions
-	  	buttonMappings[3].func = switchCams;
+	  	buttonMappings[BUTTON.y].func = switchCams;
 
 	  	requestAnimationFrame(updateStatus);
 	  }
@@ -421,7 +424,12 @@
 	 			//Button values
 	 			var pct = Math.round(val * 100) + "%";
 	 			b.style.backgroundSize = pct + " " + pct;
-	 			b.innerHTML = i + ":" + pct + " // ";
+	 			//Label button values with button names
+	 			for(name in BUTTON) {
+	 				if(BUTTON[name] == i) {
+	 					b.innerHTML = name + ":" + pct + " // ";
+	 				}
+	 			}
 
 	 			//If the button is pressed...
 	 			if (pressed) {

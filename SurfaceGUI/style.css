@@ -58,3 +58,7 @@ h2 {
 	right: 0;
 	margin: 5px;
 }
+
+#controller-display {
+	font-size: 11pt;
+}
