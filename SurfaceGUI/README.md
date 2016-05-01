@@ -29,7 +29,7 @@ The bottom panel will display the button and axe values of any connected control
 
 ## Controls
 **Xbox:**  
-**Y** - Cycle cameras  
+**Back** - Cycle cameras  
 
 **Mouse/Keyboard:**  
 **Double click main camera** - Cycle cameras  

@@ -383,7 +383,7 @@
    		$("#controller-display").append(d);
 
 	  	//Map buttons to functions
-	  	buttonMappings[BUTTON.y].func = switchCams;
+	  	buttonMappings[BUTTON.back].func = switchCams;
 
 	  	requestAnimationFrame(updateStatus);
 	  }
